@@ -1,0 +1,127 @@
+<h1>Mastering Administrator Manual</h1>
+
+<h2>Getting started</h2>
+
+<p>If you created a Mastering site, you should have received your login information for both a root admin account and an admin account. The root admin account is used to manage users and admins, while the admin account is for creating tests and scoring responses that cannot be automatically scored. Use your regular admin login information on the <a href="index.php">test administration page</a>, and your root password for the <a href="../root/">root management page</a>.</p>
+
+<p>Before proceeding, you should register a regular user for yourself so that you can see how the system works. The registration page is located <a href="../register.php">here</a>; you will need to fill in your name, email address, a username, and a password.</p>
+
+<p>After registering a regular user, you will be able to login to the <a href="../compete/">Mastering user area</a>. You can see the various test categories, and change your information at the User Control Panel. There should be a Getting Started test there; take this test to see what the testing environment feels like: you may submit answers as many times as you like, and you can always change submitted answers. When you are done, you can click on "Grade" to grade the entire test. If you receive less than the preset minimum passing score, then you will have to retake the test. Only the first score is counted for the user points.</p>
+
+<p>Note that tests also have an associated chapter. Users will only be able to take tests that are on their current chapter. As soon as they pass any of the tests in their chapter, they move on to the next chapter (for this reason, you may want to only have one test per chapter). Users can also view any text at or below their chapter.</p>
+
+<p>When you are ready, logout and return to the test administration area.</p>
+
+<h2>Make your first test; TAMSQ format</h2>
+
+<p>Click on "Add a new test" from the administration area. You will be asked to fill in several fields.</p>
+
+<p>The title will be displayed both in the title of the webpage and as a header in the body. The chapter is a number; the first chapter is one, so you should number the chapters for your tests accordingle. The first large text area is for the TAMSQ test data. You shouldn't create your test inside this field; rather, it should be copied and pasted from another file stored on your computer. The second large text area is for an explanation of test answers so that users can review chapters.</p>
+
+<p>In the TAMSQ format, questions are separated from each other by a blank line. Unseparated lines are considered one question. For short answer questions that have a correct answer added and all long answer questions, the first line of the question should be either ":tamsq/shortanswer" or ":tamsq/longanswer". The colon is recognized as manually specifying the question type, and the remainder is the type.</p>
+
+<p>The parser will automatically recognize questions without this type specification as either short answer, if there is only one line in the question, or multiple choice, if otherwise. The TAMSQ type for multiple choice questions is "tamsq/multiplechoice". So, to manually specify a multiple choice question, the first line should be ":tamsq/multiplechoice".</p>
+
+<p>For short answer and long answer questions, a correct answer may follow the question text. The correct answer should be preceded by an asterick. For example:</p>
+
+<pre>:tamsq/shortanswer
+What is one plus one?
+*Two</pre>
+
+<p>The above question would be recognized as multiple choice if there was not a type specification, because there multiple lines.</p>
+
+<p>In multiple choice questions, each line following the first line (excluding a type specification line) is an answer choice. A correct answer choice should be preceded by an asterick. For example:</p>
+
+<pre>What is one plus one?
+One
+*Two
+Three</pre>
+
+<p>The above question could be preceded be a type specification, ":tamsq/multiplechoice", but this is not required because there are multiple (four) lines in the question. The asterick will not be shown to test takers, but the answer choices will, of course, be shown.</p>
+
+<p>Certain BBCode-like tags may be used in questions. To split a question across multiple lines, for example, you can use "[br]". You can also include images with "[image]http://images.com/url/to/image.jpg[/image]".</p>
+
+<p>An example TAMSQ test may be found below.</p>
+
+<pre>This is the first question; it is short answer because there is one line and no modifier precedes it
+
+The first question was short answer because it did not have any answer choices. This one is multiple-choice.
+This is the first answer choice
+This is the second answer choice.
+*This is the correct answer.
+
+:tamsq/multiplechoice
+This question is multiple choice, even though there are no answer choices.
+
+:tamsq/shortanswer
+Note that a blank line goes between every question. This question is short answer.
+
+:tamsq/longanswer
+This is a long answer question. That means that the box for answering on the website or the space allowed on a PDF will be larger. Tests cannot currently be printed as PDFs, though.
+
+:image/jpg
+this_image_is_included.jpg
+
+:tamsq/shortanswer
+Describe the image above. Note that the above should be a URL, such as http://www.google.com/logos/2011/mary_blair-2011-hp.jpg. You can use an image hosting service like ImageShack to store images.
+
+:tamsq/shortanswer
+This has an answer. The answer will not be shown, and is only for grading purposes.
+*This is the answer to the short answer question, and you can do something similar for long answer questions. Note that for this question, the identifier (type specifier) is necessary or it would be considered multiple choice.</pre>
+
+<p>To finish submitting a test, just press submit!</p>
+
+<h2>Special TAMSQ questions</h2>
+
+<p>Besides the normal questions, there are also some special types. One can be found in the example test above: ":image/jpg". If you want to include images in your test, you use the general type specification, ":image". Following lines will be included as images into the test. Note that these should be URLs, and you should upload images either to some image hosting site.</p>
+
+<p>Currently, images are the only special type.</p>
+
+<h2>Special scoring options</h2>
+
+<p>There are a few special scoring options for various specific purposes. These are num (for numerical answers, so that users can enter approximate answers that evaluate to a similar result), n_of (for example, user has to enter three of the four organic molecule categories), and sym_eval (where user enters expressions, and the correctness of the expression is evaluated by test cases).</p>
+
+<p>In all scoring options, the following format is used:</p>
+
+<pre>$name:param1=2&ans[]=val1&ans[]=val2&ans[]=val3</pre>
+
+<p>Note that scoring options are entered on the answer. So, the line above would immediately follow the question and be preceded by an asterick. The extra $ is so that the system knows to use a special scoring option instead of checking for a case insensitive answer match.</p>
+
+<p>Anyways, in the example, param1 would be equal to 2 and ans would be an array consisting of val1, val2, and val3 (in that order).
+
+<p><b>n_of</b> takes one required parameter and three optional parameters. The required parameter is <i>ans</i>, and should be an array of correct answers (see the example earlier). The optional parameters are num, the number of correct answers the user is required to submit (default 1), <i>max</i>, the maximum number of answers the user may submit (default is equal to <i>num</i>; if the user submits more than <i>max</i>, only the first <i>max</i> answers will be evaluated), and <i>delimiter</i>, the delimiter to separate answers (default is newline). Example:</p>
+
+<pre>$n_of:num=2&ans[]=what&ans[]=is&ans[]=answer</pre>
+
+<p><b>num</b> takes one required parameter and two optional ones. The required parameter is <i>ans</i>, and should be the answer (NOT an array). <i>tol_type</i> identifies how the answer is graded; possible values are "value" and "percent". <i>tol</i> is the tolerance. If <i>tol_type</i> is "value", then the user's answer will be correct only if the difference between it and <i>ans</i> is less than <i>tol</i>. If <i>tol_type</i> is "percent", then the percent error of the user's answer is calculated. Examples:</p>
+
+<pre>$num:tol=100&tol_type=percent&ans=1337
+$num:tol=100&ans=1337</pre>
+
+<p><b>sym_eval</b> takes three required parameters, all of which are arrays. Each element of <i>var</i> is a variable (alpha string) that the user's answer is allowed to use. <i>val</i> contains an array of test cases for the variables. The first <i>var</i> elements of <i>val</i> are one test case, the second <i>var</i> elements are a second test case, etc. In each test case, the user's answer is evaluated with the values plugged in for the corresponding variables. Then, there is <i>ans</i>, the answer that the user's equation should result in. It is also an array, with one answer for each test case. Example:</p>
+
+<pre>$sym_eval:var[]=a&var[]=b&val[]=2&val[]=2&val[]=1&val[]=3&ans[]=4&ans[]=3</pre>
+
+<p>In this example, the correct answer might be a*b.</p>
+
+<p>For <b>sym_eval</b>, you can also use <b>num</b> to test the accuracy of the user's result from the equation. In this case, set <i>use_num</i> to "true" and include parameters of <b>num</b> in the parameters of <b>sym_eval</b> (except <i>ans</i>; this will be automatically set).</p>
+
+<h2>After submitting a test</h2>
+
+<p>To make sure your test is working, you should go to the index page, find your test, and press "preview". You can press "delete" to remove it if something is wrong in the preview.</p>
+
+<p>Users can begin taking the test as soon as they reach the chapter of the test. You may view both complete and incomplete submissions by pressing "Show submissions". To generate a key, if you wrote answers for questions in the TAMSQ test data, you can press "Generate key".</p>
+
+<p>Once a user grades a test, the score will be added to that user's total points and for the specific test. All scores are stored as percentages.</p>
+
+<p>Typically, submissions are graded automatically based on the answers provided in the test data. You may also wish to write essay questions or short answer questions that may have multiple possible answers. To specify that you wish to manually grade submissions, check the manual grading checkbox when you submit your test. Then, when a user takes a test and finishes, you will see a score of "-2" at the admin submissions page. You can then grade the submission and record a new grade. You should not record a new grade unless the score is "-2" because doing so could result in incorrect user points and chapters.</p>
+
+<h2>Editing tests</h2>
+
+<p>A few features have been added so that it is easier to change tests when you find a mistake. First, you can generate the TAMSQ source from the index page. This source can then be copy and pasted back into the test submission window. So, you can save the old source, delete the old test, edit the source, and submit a new test with the same chapter and name.</p>
+
+<p>If you forgot a few questions and want to add them, there is also an HTML-based add question form. This form can also be used as an online test creation tool. Added questions will probably appear at the bottom of the list of questions in the test. Also, the HTML form doesn't support everything you can do with the text-based TAMSQ format.</p>
+
+<p>If you need to change the name or the chapter, you will have to save the TAMSQ source and then recreate the test. Sorry! There's no other way currently, but it shouldn't be too much trouble.</p>
+
+<p>If you have any questions about using the free Mastering system, email us at <a href="mailto:mastering@perennate.com">mastering@perennate.com</a>.</p>

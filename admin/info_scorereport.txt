@@ -1,0 +1,18 @@
+5 < we're talking about test_id 5
+32 < we're talking about test taker with id 32
+67:1 < 32 gets 1 point for question 67 in test 5
+68:1 < 32 gets 1 point for question 68 in test 5
+69:1
+70:1
+71:0 < 32 gets 0 points for question 71 in test 5
+72:1
+
+33 < we're now talking about test taker with id 33; above line is blank to separate the test takers
+67:0
+68:0
+69:0
+70:0
+72:0 < we didn't grade 71; maybe already graded or don't know how to grade
+70:0 < graded 70 twice; that means this one will be ignored
+-1:5 < if question ID is less than 0, then these will be considered bonus points; so if you misgrade something, use this to give more points or less points
+ < leave blank line at end
